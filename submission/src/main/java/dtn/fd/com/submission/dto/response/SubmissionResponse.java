@@ -5,18 +5,26 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class SubmissionResponse {
 
-    private String serialNumber;
-    private String name;
-    private Integer rate;
-    private String vendor;
-    private String implementation;
-    private String tech;
-    private String lead;
-    private String vendorEmail;
-    private Status status;
+    private Long submissionId;
+    private Long consultantId ;
+    private LocalDate submissionDate;
+    private String vendorCompany;
+    private String vendorName;
+    private String vendorEmailAddress;
+    private String vendorPhoneNumber;
+    private String implementationPartner;
+    private String clientName ;
+    private Double payRate;
+    private Status submissionStatus;
+    private String submissionType;
+    private String city;
+    private String state;
+    private Integer zip;
 }

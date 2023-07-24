@@ -9,12 +9,12 @@ import java.util.List;
 public interface ISubmissionService {
 
      List<Submission> getAllSubmission(String lead);
-     List<Submission> searchSubmissionByLead(String lead);
-     Submission getSubmissionById(String id);
+     List<Submission> searchSubmissionByVendorName(String lead);
+     Submission getSubmissionBySubmissionId(Long id);
 
      Submission createSubmission(SubmissionRequest submissionRequest);
-     Submission updateSubmissionBySerialId(String serialNumber, SubmissionRequest submissionRequest);
-     String deleteSubmissionBySerialId(String serialNumber);
-     void deleteAll();
+     Submission updateSubmissionBySubmissionId(Long submissionId, SubmissionRequest submissionRequest);
+     Long deleteSubmissionBySubmissionId(Long submissionId);
 
+     void deleteAll();
 }

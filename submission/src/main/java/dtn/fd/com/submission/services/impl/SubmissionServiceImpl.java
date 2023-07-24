@@ -1,74 +1,73 @@
 package dtn.fd.com.submission.services.impl;
 
+import dtn.fd.com.submission.dao.ISubmissionDao;
 import dtn.fd.com.submission.dto.requests.SubmissionRequest;
-import dtn.fd.com.submission.mapper.SubmissionModelMapper;
 import dtn.fd.com.submission.models.Submission;
 import dtn.fd.com.submission.services.ISubmissionService;
+import dtn.fd.com.submission.utils.ObjectMapperUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.regex.Pattern;
 
 @Service
 public class SubmissionServiceImpl implements ISubmissionService {
 
-    private static final List<Submission> submissionList = new ArrayList<>();
+    @Autowired
+    private ISubmissionDao submissionDao;
 
     @Override
-    public List<Submission> getAllSubmission(String lead) {
-        if(lead==null)
-            return submissionList;
+    public List<Submission> getAllSubmission(String vendorName) {
+        if(vendorName==null)
+            return submissionDao.getAllSubmission();
         else
-            return searchSubmissionByLead(lead);
+            return searchSubmissionByVendorName(vendorName);
     }
 
     @Override
-    public Submission getSubmissionById(String serialNumber) {
-        return submissionList.stream().filter(submission -> submission.getSerialNumber().equals(serialNumber.trim())).findFirst().orElseThrow();
+    public Submission getSubmissionBySubmissionId(Long submissionId) {
+        return submissionDao.getSubmissionBySubmissionId(submissionId);
     }
 
     @Override
-    public List<Submission> searchSubmissionByLead(String lead) {
-        Pattern pattern = Pattern.compile(lead, Pattern.CASE_INSENSITIVE);
-        return submissionList.stream().filter(submission -> pattern.matcher(submission.getLead()).find()).toList();
+    public List<Submission> searchSubmissionByVendorName(String vendorName) {
+        return submissionDao.searchSubmissionByVendorName(vendorName);
     }
 
     @Override
     public Submission createSubmission(SubmissionRequest submissionRequest) {
-        Submission submission = SubmissionModelMapper.convertSubmissionRequestToModel(submissionRequest);
-        submission.setSerialNumber(UUID.randomUUID().toString());
-        submissionList.add(submission);
-        //System.out.println(submissionList);
-        return submission;
+        Submission submission = ObjectMapperUtils.map(submissionRequest, Submission.class);
+        return submissionDao.createSubmission(submission);
     }
 
     @Override
-    public Submission updateSubmissionBySerialId(String serialNumber, SubmissionRequest submissionRequest) {
-        for (int i = 0; i < submissionList.size(); i++) {
-            if (submissionList.get(i).getSerialNumber().equals(serialNumber)) {
-                Submission submission = SubmissionModelMapper.convertSubmissionRequestToModel(submissionRequest);
-                submission.setSerialNumber(serialNumber);
-                submissionList.set(i, submission);
-                return submission;
-            }
-        }
-        throw new RuntimeException(serialNumber + " doesn't exist");
+    public Submission updateSubmissionBySubmissionId(Long submissionId, SubmissionRequest submissionRequest) {
+        Submission submission = submissionDao.getSubmissionBySubmissionId(submissionId);
+        submission.setConsultantId(submissionRequest.getConsultantId());
+        submission.setSubmissionDate(submissionRequest.getSubmissionDate());
+        submission.setVendorCompany(submissionRequest.getVendorCompany());
+        submission.setVendorName(submissionRequest.getVendorName());
+        submission.setVendorEmailAddress(submissionRequest.getVendorEmailAddress());
+        submission.setVendorPhoneNumber(submissionRequest.getVendorPhoneNumber());
+        submission.setImplementationPartner(submissionRequest.getImplementationPartner());
+        submission.setClientName(submissionRequest.getClientName());
+        submission.setPayRate(submissionRequest.getPayRate());
+        submission.setSubmissionStatus(submissionRequest.getSubmissionStatus());
+        submission.setSubmissionType(submissionRequest.getSubmissionType());
+        submission.setCity(submissionRequest.getCity());
+        submission.setState(submissionRequest.getState());
+        submission.setZip(submissionRequest.getZip());
+        return submissionDao.updateSubmission(submission);
     }
 
     @Override
-    public String deleteSubmissionBySerialId(String serialNumber) {
-        for (int i = 0; i < submissionList.size(); i++) {
-            if (submissionList.get(i).getSerialNumber().equals(serialNumber)) {
-                submissionList.remove(i);
-                return "Deleted Successfully";
-            }
-        }
-        throw new RuntimeException(serialNumber + " doesn't exist");
+    public Long deleteSubmissionBySubmissionId(Long submissionId) {
+        return submissionDao.deleteSubmissionBySubmissionId(submissionId);
     }
+
+
     @Override
     public void deleteAll() {
-        submissionList.clear();
+
     }
 }

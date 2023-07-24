@@ -28,9 +28,9 @@ public class SubmissionController {
     }
 
 
-    @GetMapping(path = "{serial-number}")
-    public ResponseEntity<SubmissionResponse> getSubmissionBySerialNumber(@PathVariable(name = "serial-number") String serialNumber){
-        Submission submission=submissionService.getSubmissionById(serialNumber);
+    @GetMapping(path = "{submission-id}")
+    public ResponseEntity<SubmissionResponse> getSubmissionBySerialNumber(@PathVariable(name = "submission-id") Long submissionId){
+        Submission submission=submissionService.getSubmissionBySubmissionId(submissionId);
         SubmissionResponse submissionResponse=SubmissionModelMapper.convertModelToSubmissionResponse(submission);
         return new ResponseEntity<>(submissionResponse, HttpStatus.OK);
     }
@@ -44,16 +44,16 @@ public class SubmissionController {
           return new ResponseEntity<>(submissionResponse,HttpStatus.CREATED);
     }
 
-    @PatchMapping(path = "{serial-number}")
-    public ResponseEntity<SubmissionResponse> updateSubmissionBySerialId(@PathVariable(name = "serial-number") String serialNumber,@RequestBody SubmissionRequest submissionRequest){
-          Submission submission=submissionService.updateSubmissionBySerialId(serialNumber,submissionRequest);
+    @PatchMapping(path = "{submission-id}")
+    public ResponseEntity<SubmissionResponse> updateSubmissionBySerialId(@PathVariable(name = "submission-id") Long submissionId,@RequestBody SubmissionRequest submissionRequest){
+          Submission submission=submissionService.updateSubmissionBySubmissionId(submissionId,submissionRequest);
           SubmissionResponse submissionResponse=SubmissionModelMapper.convertModelToSubmissionResponse(submission);
           return ResponseEntity.ok(submissionResponse);
     }
 
-    @DeleteMapping(path = "{serial-number}")
-    public ResponseEntity<String> deleteSubmissionBySerialId(@PathVariable(name = "serial-number") String serialNumber){
-          String msg=submissionService.deleteSubmissionBySerialId(serialNumber);
-          return new ResponseEntity<>(msg,HttpStatus.NO_CONTENT);
+    @DeleteMapping(path = "{submission-id}")
+    public ResponseEntity<String> deleteSubmissionBySerialId(@PathVariable(name = "submission-id") Long submissionId){
+          Long id=submissionService.deleteSubmissionBySubmissionId(submissionId);
+          return new ResponseEntity<>("Deleted Successfully!!",HttpStatus.NO_CONTENT);
     }
 }

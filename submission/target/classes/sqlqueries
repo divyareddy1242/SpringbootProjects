@@ -1,0 +1,154 @@
+CREATE table Employee(
+id INTEGER primary key,
+first_name VARCHAR(20),
+last_name VARCHAR(20),
+job_start_date DATE,
+salary INTEGER);
+
+
+ALTER table Employee add department VARCHAR(20);
+insert into Employee (first_name,last_name,job_start_date,salary,department)values
+("Divya","Reddy",'2023-07-27','7000',"Computerscience");
+insert into Employee (first_name,last_name,job_start_date,salary,department)values
+("Vikranth","Reddy",'2023-07-23','8500',"Mechanical Engineer");
+insert into Employee (first_name,last_name,job_start_date,salary,department)values
+("Ashu","Valluri",'2023-01-01','10500',"Industrial");
+insert into Employee (first_name,last_name,job_start_date,salary,department)values
+("Hasini","Komi",'2023-05-25','5500',"Electronics");
+insert into Employee (first_name,last_name,job_start_date,salary,department)values
+("Kavya","Vallabhaneni",'2023-03-12','6200',"Agriculture");
+
+
+select max(salary) as maximum_salary from Employee;
+
+
+select count(*),department from Employee group by(department);
+
+consultant table:
+
+create table consultant_detail
+(
+id varchar(20) primary key,
+lead_id varchar(20),
+first_name varchar(20),
+last_name varchar(20),
+email_address varchar(30),
+phone_number Integer,
+FOREIGN KEY (lead_id) references lead_detail(lead_id)
+);
+
+
+Inserting values into consultant detail table:
+
+
+
+insert into consultant_detail (id,lead_id,first_name,last_name,email_address,phone_number)values
+("C120","L1","Lavanya","Boggavarapu","lav99@gmail.com","7013625");
+insert into consultant_detail (id,lead_id,first_name,last_name,email_address,phone_number)values
+("C121","L2","Niharika","Akula","niha@gmail.com","98781245");
+insert into consultant_detail (id,lead_id,first_name,last_name,email_address,phone_number)values
+("C123","L3","Pranathi","Vaddela","pranaa@gmail.com","8796573");
+insert into consultant_detail (id,lead_id,first_name,last_name,email_address,phone_number)values
+("C124","L2","Aditya","Sarman","sarman@gmail.com","67123456");
+insert into consultant_detail (id,lead_id,first_name,last_name,email_address,phone_number)values
+("C125","L3","Ashok","Venkata","ashu@gmail.com","67128934");
+
+lead table:
+
+
+create table lead_detail
+(
+lead_id varchar(20) primary key,
+first_name varchar(20),
+last_name varchar(20),
+email_address varchar(30),
+phone_number Integer(20)
+);
+
+
+Inserting data into lead table:
+
+
+
+insert into lead_detail (lead_id,first_name,last_name,email_address,phone_number)values
+("L3","Spandana","Reddy","span@gmail.com","67128676");
+insert into lead_detail (lead_id,first_name,last_name,email_address,phone_number)values
+("L1","Tejan","Reddy","tejau@gmail.com","67778734");
+insert into lead_detail (lead_id,first_name,last_name,email_address,phone_number)values
+("L2","Naveen","Reddy","nav@gmail.com","88918934");
+
+submission table:
+
+
+create table submission
+(
+ submission_id VARCHAR(50) primary key,
+ consultant_id VARCHAR(50),
+ submission_date DATETIME,
+ vendor_company VARCHAR(60),
+ vendor_name VARCHAR(80),
+ vendor_email_address VARCHAR(50),
+ vendor_phone_number VARCHAR(15),
+ implementation_partner varchar(60),
+ client_name VARCHAR(40),
+ pay_rate DOUBLE,
+ submission_status VARCHAR(60),
+ submission_type VARCHAR(10),
+ city VARCHAR(50),
+ state VARCHAR(2),
+ zip INTEGER,
+ FOREIGN KEY (consultant_id) REFERENCES consultant_detail(id)
+ );
+
+Inserting data into submission table:
+
+
+INSERT INTO submission (submission_id, consultant_id, submission_date, vendor_company, vendor_name, vendor_email_address, vendor_phone_number, implementation_partner, client_name, pay_rate, submission_status, submission_type, city, state, zip) VALUES
+('S002', 'C121', '2022-11-02', 'Vendor Company 2', 'Vendor Name 2', 'vendor2@example.com', '9876543210', 'Implementation Partner 2', 'Client Name 2', 4000.00, 'Submitted', 'Type B', 'City 2', 'ST', 23456),
+('S003', 'C120', '2023-02-28', 'Vendor Company 3', 'Vendor Name 3', 'vendor3@example.com', '5678901234', 'Implementation Partner 3', 'Client Name 3', 6000.00, 'Submitted', 'Type C', 'City 3', 'ST', 34567),
+('S004', 'C123', '2022-09-20', 'Vendor Company 4', 'Vendor Name 4', 'vendor4@example.com', '8901234567', 'Implementation Partner 4', 'Client Name 4', 5500.00, 'Submitted', 'Type A', 'City 4', 'ST', 45678),
+('S005', 'C124', '2023-03-10', 'Vendor Company 5', 'Vendor Name 5', 'vendor5@example.com', '4567890123', 'Implementation Partner 5', 'Client Name 5', 5200.00, 'Submitted', 'Type B', 'City 5', 'ST', 56789);
+('S006', 'C125', '2023-03-15', 'Vendor Company 6', 'Vendor Name 6', 'vendor6@example.com', '45678660123', 'Implementation Partner 6', 'Client Name 6', null, 'Submitted', 'Type B', 'City 5', 'ST', 56789);
+
+
+submission-update table:
+
+CREATE TABLE submission_update(
+ id INTEGER primary key,
+submission_id VARCHAR(20) ,
+update_text varchar(20),
+created_date DATE,
+FOREIGN KEY (submission_id) REFERENCES submission(submission_id));
+
+
+
+
+
+2.Write a SQL query to update email_address on the consultant_detail table
+
+UPDATE consultant_detail SET email_address = 'add@example.com' WHERE id = 'C120';
+
+3.Write a SQL to find total number of submissions for each constulant.
+
+select consultant_id ,count(submission_id) from submission group by(consultant_id);
+
+4.Write a SQL to find total number of submissions for each constulant by each submission day
+
+select consultant_id,submission_date,count(submission_id) from submission group by submission_date,consultant_id;
+
+5.write a SQL to delete all submissions where "rate" is null
+
+delete from submission where pay_rate is null;
+
+6.Given a lead name and submission date, Write a SQL query to find the submissions.
+
+SELECT submission * FROM submission JOIN consultant_detail ON (submission.consultant_id=consultant_detail.id) JOIN lead_detail ON (lead_detail.lead_id=consultant_detail.lead_id) WHERE ( lead_detail.first_name ="Naveen" AND lead_detail.last_name="Reddy");
+
+
+7.Write a SQL query to find the number of submissions by each lead.
+
+
+select count(submission_id) as total_no_of_submissions,lead_detail.lead_id from submission
+left  join consultant_detail on submission.consultant_id=consultant_detail.id
+left  join lead_detail on lead_detail.lead_id=consultant_detail.lead_id
+group by lead_id;
